@@ -11,10 +11,13 @@
 - 支持批量運行測試用例
 - 支持身份驗證令牌
 - 提供高級測試功能（隨機數據生成、資源清理等）
+- **自動檢測 API 端口和端點**（新功能）
+- **智能生成測試數據**（新功能）
+- **從日誌文件分析 API 端點和輸入**（新功能）
 
 ## 安裝
 
-1. 確保已安裝 Python 3.6 或更高版本
+1. 確保已安裝 Python 3.11 或更高版本
 2. 安裝所需依賴：
 
 ```bash
@@ -89,6 +92,19 @@ api_debugger.generate_report("my_project_api_test_report.html")
 python advanced_test.py --url http://localhost:8000 --token your_token_here
 ```
 
+### 使用自動檢測功能（新功能）
+
+```bash
+# 自動檢測 API 端口和端點並運行測試
+python main.py
+
+# 指定主機和端口範圍
+python main.py --host api.example.com --port-min 8000 --port-max 9000
+
+# 指定日誌文件
+python main.py --log-file custom_log.log
+```
+
 ## 示例腳本
 
 ### example.py
@@ -111,6 +127,41 @@ python example.py
 ```bash
 python advanced_test.py --url http://localhost:8000
 ```
+
+### auto_test.py（新增）
+
+這是一個自動檢測示例，演示如何使用新的自動檢測功能：
+
+- 自動掃描開放端口
+- 自動檢測 API 端點
+- 智能生成測試數據
+- 從日誌文件分析 API 信息
+
+```bash
+python auto_test.py
+```
+
+## 自動檢測功能（新增）
+
+### 端口檢測
+
+工具可以自動掃描指定範圍內的開放端口，找到可能運行 API 的服務。
+
+### 端點檢測
+
+對於檢測到的開放端口，工具會嘗試訪問常見的 API 路徑，檢測支持的 HTTP 方法。
+
+### 智能數據生成
+
+根據端點路徑自動生成適合的測試數據，例如：
+
+- 用戶相關端點：生成用戶名、電子郵件、密碼等
+- 產品相關端點：生成產品名稱、描述、價格等
+- 訂單相關端點：生成訂單數據、產品列表等
+
+### 日誌分析
+
+從之前的測試日誌中提取 API 端點信息和輸入數據模板，用於生成更精確的測試用例。
 
 ## 自定義測試用例
 
@@ -140,6 +191,7 @@ python advanced_test.py --url http://localhost:8000
 4. **測試輸入驗證**：確保 API 正確驗證輸入數據
 5. **測試性能**：確保 API 在高負載下仍能正常工作
 6. **清理測試數據**：測試後清理創建的測試數據
+7. **使用自動檢測功能**：對於未知或變化的 API，使用自動檢測功能
 
 ## 自定義和擴展
 
@@ -149,6 +201,7 @@ python advanced_test.py --url http://localhost:8000
 - 集成到 CI/CD 流程中
 - 添加更多報告格式（例如 JSON、CSV）
 - 添加更多驗證邏輯
+- 擴展自動檢測功能
 
 ## 許可證
 
@@ -169,37 +222,62 @@ MIT
    import argparse
    import sys
    from api_debugger import ApiDebugger
+   from port_detector import ApiPortDetector
    
    def main():
        parser = argparse.ArgumentParser(description="API 測試工具")
-       parser.add_argument("--url", required=True, help="API 基礎 URL")
+       parser.add_argument("--url", help="API 基礎 URL")
        parser.add_argument("--token", help="API 認證令牌")
        parser.add_argument("--env", default="dev", choices=["dev", "staging", "prod"], help="環境")
+       parser.add_argument("--auto-detect", action="store_true", help="自動檢測 API 端口和端點")
        
        args = parser.parse_args()
        
-       # 初始化 API 調試器
-       api_debugger = ApiDebugger(
-           base_url=args.url,
-           headers={"Content-Type": "application/json"}
-       )
-       
-       if args.token:
-           api_debugger.add_auth_token(args.token)
-       
-       # 載入特定環境的測試用例
-       test_cases = load_test_cases(args.env)
-       
-       # 運行測試
-       summary = api_debugger.run_test_suite(test_cases)
-       
-       # 生成報告
-       api_debugger.generate_report(f"api_test_report_{args.env}.html")
-       
-       # 如果有失敗的測試，返回非零退出碼
-       if summary["failed_tests"] > 0:
-           print(f"測試失敗! {summary['failed_tests']} 個測試未通過")
-           sys.exit(1)
+       if args.auto_detect:
+           # 使用自動檢測功能
+           detector = ApiPortDetector(
+               host=args.url.split("://")[1].split(":")[0] if args.url else "localhost"
+           )
+           results = detector.auto_detect_and_test()
+           
+           # 檢查結果
+           success = True
+           for port, result in results.items():
+               summary = result["summary"]
+               if summary["failed_tests"] > 0:
+                   success = False
+                   print(f"端口 {port} 測試失敗: {summary['failed_tests']} 個測試未通過")
+           
+           if not success:
+               sys.exit(1)
+       else:
+           # 使用傳統方式
+           if not args.url:
+               print("錯誤: 未指定 --url 參數，且未使用 --auto-detect")
+               sys.exit(1)
+               
+           # 初始化 API 調試器
+           api_debugger = ApiDebugger(
+               base_url=args.url,
+               headers={"Content-Type": "application/json"}
+           )
+           
+           if args.token:
+               api_debugger.add_auth_token(args.token)
+           
+           # 載入特定環境的測試用例
+           test_cases = load_test_cases(args.env)
+           
+           # 運行測試
+           summary = api_debugger.run_test_suite(test_cases)
+           
+           # 生成報告
+           api_debugger.generate_report(f"api_test_report_{args.env}.html")
+           
+           # 如果有失敗的測試，返回非零退出碼
+           if summary["failed_tests"] > 0:
+               print(f"測試失敗! {summary['failed_tests']} 個測試未通過")
+               sys.exit(1)
        
        print("所有測試通過!")
    
@@ -222,9 +300,14 @@ MIT
    
    if __name__ == "__main__":
        main() 
+```
 
+## 自定義 API 調試器
+
+```python
 # my_custom_debugger.py
 from api_debugger import ApiDebugger
+from port_detector import ApiPortDetector
 
 class MyProjectApiDebugger(ApiDebugger):
     """針對我的專案定製的 API 調試器"""
@@ -251,4 +334,27 @@ class MyProjectApiDebugger(ApiDebugger):
             expected_status=201
         )
         
-        return result1["success"] and result2["success"] 
+        return result1["success"] and result2["success"]
+    
+    def auto_test_my_api(self):
+        """自動測試我的 API"""
+        # 使用自動檢測功能
+        detector = ApiPortDetector(
+            host=self.base_url.split("://")[1].split(":")[0],
+            port_range=(8000, 9000)
+        )
+        
+        # 檢測端點
+        port = int(self.base_url.split(":")[-1].split("/")[0])
+        endpoints = detector.detect_api_endpoints(port)
+        
+        # 生成並運行測試用例
+        endpoint_data = {}
+        for endpoint, methods in endpoints.items():
+            endpoint_data[endpoint] = {
+                "methods": methods,
+                "data_templates": {}
+            }
+        
+        test_cases = detector.generate_test_cases(port, endpoint_data)
+        return self.run_test_suite(test_cases) 
