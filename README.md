@@ -14,6 +14,8 @@
 - **自動檢測 API 端口和端點**（新功能）
 - **智能生成測試數據**（新功能）
 - **從日誌文件分析 API 端點和輸入**（新功能）
+- **手動指定 API 端口進行自動測試**（新功能）
+- **互動式測試界面**（新功能）
 
 ## 安裝
 
@@ -92,7 +94,7 @@ api_debugger.generate_report("my_project_api_test_report.html")
 python advanced_test.py --url http://localhost:8000 --token your_token_here
 ```
 
-### 使用自動檢測功能（新功能）
+### 使用自動檢測功能
 
 ```bash
 # 自動檢測 API 端口和端點並運行測試
@@ -103,7 +105,19 @@ python main.py --host api.example.com --port-min 8000 --port-max 9000
 
 # 指定日誌文件
 python main.py --log-file custom_log.log
+
+# 手動指定 API 端口進行測試
+python main.py --port 8080
 ```
+
+### 使用互動式測試界面（新功能）
+
+```bash
+# 啟動互動式測試界面
+python interactive_test.py
+```
+
+互動式界面會引導您輸入主機名、端口號，並提供選項分析日誌文件和運行測試。
 
 ## 示例腳本
 
@@ -128,7 +142,7 @@ python example.py
 python advanced_test.py --url http://localhost:8000
 ```
 
-### auto_test.py（新增）
+### auto_test.py
 
 這是一個自動檢測示例，演示如何使用新的自動檢測功能：
 
@@ -141,7 +155,20 @@ python advanced_test.py --url http://localhost:8000
 python auto_test.py
 ```
 
-## 自動檢測功能（新增）
+### interactive_test.py（新增）
+
+這是一個互動式測試界面，提供簡單的命令行交互：
+
+- 手動輸入 API 主機名和端口
+- 檢測 API 端點
+- 選擇是否分析日誌文件
+- 選擇是否運行測試
+
+```bash
+python interactive_test.py
+```
+
+## 自動檢測功能
 
 ### 端口檢測
 
@@ -162,6 +189,22 @@ python auto_test.py
 ### 日誌分析
 
 從之前的測試日誌中提取 API 端點信息和輸入數據模板，用於生成更精確的測試用例。
+
+### 手動指定端口
+
+您可以手動指定要測試的 API 端口，系統將自動檢測該端口上的 API 端點並生成測試用例。這在您已知 API 端口但不確定端點結構時特別有用。
+
+### 互動式測試（新增）
+
+互動式測試界面提供了一種簡單的方式來測試 API，無需編寫命令行參數。它會引導您完成整個測試過程，包括：
+
+1. 輸入 API 主機名和端口
+2. 檢測 API 端點
+3. 選擇是否分析日誌文件以獲取更精確的 API 信息
+4. 選擇是否運行測試
+5. 顯示測試結果摘要
+
+這對於快速測試和探索未知的 API 特別有用。
 
 ## 自定義測試用例
 
