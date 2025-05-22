@@ -1,0 +1,825 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>API 測試報告</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .header { background-color: #f5f5f5; padding: 20px; border-radius: 5px; }
+                .summary { margin: 20px 0; }
+                .test-case { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+                .test-case.success { border-left: 5px solid green; }
+                .test-case.failure { border-left: 5px solid red; }
+                .details { margin-top: 10px; font-family: monospace; white-space: pre-wrap; }
+                .success-rate { font-size: 24px; font-weight: bold; }
+                .success-rate.good { color: green; }
+                .success-rate.bad { color: red; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>API 測試報告</h1>
+                <p>生成時間: 2025-05-22 22:28:23</p>
+            </div>
+            
+            <div class="summary">
+                <h2>測試摘要</h2>
+                <p>總測試數: 30</p>
+                <p>通過測試數: 0</p>
+                <p>失敗測試數: 30</p>
+                <p class="success-rate bad">
+                    成功率: 0.00%
+                </p>
+            </div>
+            
+            <h2>測試詳情</h2>
+        
+            <div class="test-case failure">
+                <h3>1. 創建用戶 - 失敗</h3>
+                <p>測試創建新用戶</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 201)</td></tr>
+                    <tr><th>耗時</th><td>2.06 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "Test User fYnEi",
+  "email": "test_zYpctpQW@example.com",
+  "password": "caD29660U7"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>2. 用戶註冊 - 失敗</h3>
+                <p>測試用戶註冊功能</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/auth/register</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 201)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "Test User Ct9so",
+  "email": "test_r7gRnsRH@example.com",
+  "password": "FTk9XWwfku"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>3. 用戶登錄 - 失敗</h3>
+                <p>測試用戶登錄功能</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/auth/login</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "email": "test_r7gRnsRH@example.com",
+  "password": "FTk9XWwfku"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>4. 無效輸入測試 1 - 失敗</h3>
+                <p>測試無效輸入: 缺少必要字段 (email, password)</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 400)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "Test User"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>5. 無效輸入測試 2 - 失敗</h3>
+                <p>測試無效輸入: 無效的電子郵件格式</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 400)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "Test User",
+  "email": "invalid-email",
+  "password": "password123"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>6. 無效輸入測試 3 - 失敗</h3>
+                <p>測試無效輸入: 密碼太短</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 400)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "123"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>7. 無效輸入測試 4 - 失敗</h3>
+                <p>測試無效輸入: 名稱太長</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 400)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+  "email": "test@example.com",
+  "password": "password123"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>8. 無效輸入測試 5 - 失敗</h3>
+                <p>測試無效輸入: XSS 嘗試</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 400)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "<script>alert('XSS')</script>",
+  "email": "test@example.com",
+  "password": "password123"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>9. 無效輸入測試 6 - 失敗</h3>
+                <p>測試無效輸入: SQL 注入嘗試</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>POST</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 400)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>{
+  "name": "Test User",
+  "email": "test@example.com' OR '1'='1",
+  "password": "password123"
+}</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>10. 速率限制測試 1 - 失敗</h3>
+                <p>快速連續請求 1/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>11. 速率限制測試 2 - 失敗</h3>
+                <p>快速連續請求 2/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>12. 速率限制測試 3 - 失敗</h3>
+                <p>快速連續請求 3/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.02 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>13. 速率限制測試 4 - 失敗</h3>
+                <p>快速連續請求 4/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>14. 速率限制測試 5 - 失敗</h3>
+                <p>快速連續請求 5/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>15. 速率限制測試 6 - 失敗</h3>
+                <p>快速連續請求 6/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>16. 速率限制測試 7 - 失敗</h3>
+                <p>快速連續請求 7/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>17. 速率限制測試 8 - 失敗</h3>
+                <p>快速連續請求 8/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.02 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>18. 速率限制測試 9 - 失敗</h3>
+                <p>快速連續請求 9/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.02 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>19. 速率限制測試 10 - 失敗</h3>
+                <p>快速連續請求 10/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>20. 速率限制測試 11 - 失敗</h3>
+                <p>快速連續請求 11/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.02 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>21. 速率限制測試 12 - 失敗</h3>
+                <p>快速連續請求 12/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.02 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>22. 速率限制測試 13 - 失敗</h3>
+                <p>快速連續請求 13/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>23. 速率限制測試 14 - 失敗</h3>
+                <p>快速連續請求 14/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>24. 速率限制測試 15 - 失敗</h3>
+                <p>快速連續請求 15/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>25. 速率限制測試 16 - 失敗</h3>
+                <p>快速連續請求 16/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.00 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>26. 速率限制測試 17 - 失敗</h3>
+                <p>快速連續請求 17/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>27. 速率限制測試 18 - 失敗</h3>
+                <p>快速連續請求 18/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>28. 速率限制測試 19 - 失敗</h3>
+                <p>快速連續請求 19/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>29. 速率限制測試 20 - 失敗</h3>
+                <p>快速連續請求 20/20</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 200)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="test-case failure">
+                <h3>30. 速率限制檢查 - 失敗</h3>
+                <p>檢查是否觸發了速率限制</p>
+                <table>
+                    <tr><th>URL</th><td>http://localhost:8000/api/users</td></tr>
+                    <tr><th>方法</th><td>GET</td></tr>
+                    <tr><th>狀態碼</th><td>404 (預期: 429)</td></tr>
+                    <tr><th>耗時</th><td>0.01 秒</td></tr>
+                </table>
+                
+                <div class="details">
+                    <h4>請求數據:</h4>
+                    <pre>null</pre>
+                    
+                    <h4>響應數據:</h4>
+                    <pre>{
+  "detail": "Not Found"
+}</pre>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+        </body>
+        </html>
+        
