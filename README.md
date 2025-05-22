@@ -16,6 +16,7 @@
 - **從日誌文件分析 API 端點和輸入**（新功能）
 - **手動指定 API 端口進行自動測試**（新功能）
 - **互動式測試界面**（新功能）
+- **測試特定 API 路由**（新功能）
 
 ## 安裝
 
@@ -110,7 +111,7 @@ python main.py --log-file custom_log.log
 python main.py --port 8080
 ```
 
-### 使用互動式測試界面（新功能）
+### 使用互動式測試界面
 
 ```bash
 # 啟動互動式測試界面
@@ -118,6 +119,40 @@ python interactive_test.py
 ```
 
 互動式界面會引導您輸入主機名、端口號，並提供選項分析日誌文件和運行測試。
+
+### 測試特定 API 路由
+
+```bash
+# 啟動特定 API 路由測試工具（互動式）
+python test_specific_route.py
+
+# 使用命令行參數測試特定 API 路由
+python main.py --port 8080 --route /api/search_contracts
+
+# 測試 POST 請求並提供數據
+python main.py --port 8080 --route /api/contracts/create --method POST --data '{"title":"測試合約","client_id":123,"amount":5000}'
+
+# 測試帶有錯誤處理的請求
+python main.py --port 8080 --route /api/contracts/validate --method POST --data '{"contract_id":456}' --expected-status 400
+```
+
+特定 API 路由測試工具會引導您輸入主機名、端口號、API 路由路徑、HTTP 方法和請求數據，然後對該特定路由進行測試。
+
+## 命令行參數
+
+### main.py 參數
+
+| 參數 | 說明 | 默認值 |
+|------|------|--------|
+| `--host` | API 主機名 | localhost |
+| `--port` | 指定要測試的API端口 | 無 |
+| `--route` | 指定要測試的API路由路徑 | 無 |
+| `--method` | HTTP方法 (GET/POST/PUT/DELETE/PATCH) | GET |
+| `--port-min` | 端口掃描範圍最小值 | 8000 |
+| `--port-max` | 端口掃描範圍最大值 | 9000 |
+| `--log-file` | 日誌文件路徑 | api_debug.log |
+| `--data` | JSON格式的請求數據 | 無 |
+| `--expected-status` | 預期的HTTP狀態碼 | 200 |
 
 ## 示例腳本
 
@@ -155,7 +190,7 @@ python advanced_test.py --url http://localhost:8000
 python auto_test.py
 ```
 
-### interactive_test.py（新增）
+### interactive_test.py
 
 這是一個互動式測試界面，提供簡單的命令行交互：
 
@@ -166,6 +201,21 @@ python auto_test.py
 
 ```bash
 python interactive_test.py
+```
+
+### test_specific_route.py
+
+這是一個特定 API 路由測試工具，專門用於測試單個 API 端點：
+
+- 手動輸入 API 主機名、端口和路由路徑
+- 選擇 HTTP 方法（GET、POST、PUT、DELETE、PATCH）
+- 智能生成請求數據或使用歷史數據模板
+- 支持手動輸入請求數據
+- 顯示詳細的測試結果
+- 支持自動生成無效輸入測試
+
+```bash
+python test_specific_route.py
 ```
 
 ## 自動檢測功能
@@ -194,7 +244,7 @@ python interactive_test.py
 
 您可以手動指定要測試的 API 端口，系統將自動檢測該端口上的 API 端點並生成測試用例。這在您已知 API 端口但不確定端點結構時特別有用。
 
-### 互動式測試（新增）
+### 互動式測試
 
 互動式測試界面提供了一種簡單的方式來測試 API，無需編寫命令行參數。它會引導您完成整個測試過程，包括：
 
@@ -206,6 +256,35 @@ python interactive_test.py
 
 這對於快速測試和探索未知的 API 特別有用。
 
+### 特定 API 路由測試
+
+特定 API 路由測試功能允許您針對單個 API 端點進行深入測試：
+
+1. 手動輸入 API 主機名、端口和路由路徑
+2. 選擇 HTTP 方法（GET、POST、PUT、DELETE、PATCH）
+3. 系統會嘗試從日誌文件中找到相關的請求數據模板
+4. 如果沒有找到模板，會根據路由路徑智能生成請求數據
+5. 您也可以選擇手動輸入請求數據
+6. 運行測試並顯示詳細的測試結果
+7. 可以選擇自動生成無效輸入測試，檢查 API 的錯誤處理能力
+
+這個功能特別適合針對特定 API 端點進行深入調試和測試，例如檢查新開發的 API 是否有 bug。
+
+## 使用示例
+
+### 測試特定 API 路由
+
+```bash
+# 測試 GET 請求
+python main.py --port 8080 --route /api/search_contracts
+
+# 測試 POST 請求並提供數據
+python main.py --port 8080 --route /api/contracts/create --method POST --data '{"title":"測試合約","client_id":123,"amount":5000}'
+
+# 測試帶有錯誤處理的請求
+python main.py --port 8080 --route /api/contracts/validate --method POST --data '{"contract_id":456}' --expected-status 400
+```
+
 ## 自定義測試用例
 
 你可以根據自己的 API 創建自定義測試用例。測試用例是一個字典，包含以下字段：
@@ -216,188 +295,4 @@ python interactive_test.py
 - `expected_status`: 預期的 HTTP 狀態碼
 - `expected_response`: 預期的響應數據（部分匹配）
 - `test_name`: 測試名稱
-- `description`: 測試描述
-
-## 測試報告
-
-測試完成後，會生成一個 HTML 測試報告，包含以下信息：
-
-- 測試摘要（總測試數、通過測試數、失敗測試數、成功率）
-- 每個測試用例的詳細信息（URL、方法、狀態碼、請求數據、響應數據等）
-- 測試結果（成功或失敗）
-
-## 最佳實踐
-
-1. **測試各種輸入情況**：包括正常輸入、邊界情況和錯誤輸入
-2. **檢查錯誤處理**：確保 API 正確處理錯誤情況
-3. **測試身份驗證和授權**：確保只有授權用戶才能訪問受保護的資源
-4. **測試輸入驗證**：確保 API 正確驗證輸入數據
-5. **測試性能**：確保 API 在高負載下仍能正常工作
-6. **清理測試數據**：測試後清理創建的測試數據
-7. **使用自動檢測功能**：對於未知或變化的 API，使用自動檢測功能
-
-## 自定義和擴展
-
-你可以根據自己的需求自定義和擴展這個工具：
-
-- 添加更多測試類型
-- 集成到 CI/CD 流程中
-- 添加更多報告格式（例如 JSON、CSV）
-- 添加更多驗證邏輯
-- 擴展自動檢測功能
-
-## 許可證
-
-MIT 
-
-## 整合到 CI/CD 流程
-
-1. **創建自動化測試腳本**：
-
-   ```bash
-   # 創建一個腳本用於 CI/CD
-   touch tools/api_debug_tool/ci_test.py
-   ```
-
-2. **編輯 ci_test.py**：
-
-   ```python
-   import argparse
-   import sys
-   from api_debugger import ApiDebugger
-   from port_detector import ApiPortDetector
-   
-   def main():
-       parser = argparse.ArgumentParser(description="API 測試工具")
-       parser.add_argument("--url", help="API 基礎 URL")
-       parser.add_argument("--token", help="API 認證令牌")
-       parser.add_argument("--env", default="dev", choices=["dev", "staging", "prod"], help="環境")
-       parser.add_argument("--auto-detect", action="store_true", help="自動檢測 API 端口和端點")
-       
-       args = parser.parse_args()
-       
-       if args.auto_detect:
-           # 使用自動檢測功能
-           detector = ApiPortDetector(
-               host=args.url.split("://")[1].split(":")[0] if args.url else "localhost"
-           )
-           results = detector.auto_detect_and_test()
-           
-           # 檢查結果
-           success = True
-           for port, result in results.items():
-               summary = result["summary"]
-               if summary["failed_tests"] > 0:
-                   success = False
-                   print(f"端口 {port} 測試失敗: {summary['failed_tests']} 個測試未通過")
-           
-           if not success:
-               sys.exit(1)
-       else:
-           # 使用傳統方式
-           if not args.url:
-               print("錯誤: 未指定 --url 參數，且未使用 --auto-detect")
-               sys.exit(1)
-               
-           # 初始化 API 調試器
-           api_debugger = ApiDebugger(
-               base_url=args.url,
-               headers={"Content-Type": "application/json"}
-           )
-           
-           if args.token:
-               api_debugger.add_auth_token(args.token)
-           
-           # 載入特定環境的測試用例
-           test_cases = load_test_cases(args.env)
-           
-           # 運行測試
-           summary = api_debugger.run_test_suite(test_cases)
-           
-           # 生成報告
-           api_debugger.generate_report(f"api_test_report_{args.env}.html")
-           
-           # 如果有失敗的測試，返回非零退出碼
-           if summary["failed_tests"] > 0:
-               print(f"測試失敗! {summary['failed_tests']} 個測試未通過")
-               sys.exit(1)
-       
-       print("所有測試通過!")
-   
-   def load_test_cases(env):
-       # 這裡可以根據不同環境載入不同的測試用例
-       # 例如從配置文件或數據庫中載入
-       # 這裡只是一個簡單的示例
-       if env == "dev":
-           return [
-               # 開發環境測試用例
-           ]
-       elif env == "staging":
-           return [
-               # 預發佈環境測試用例
-           ]
-       else:
-           return [
-               # 生產環境測試用例
-           ]
-   
-   if __name__ == "__main__":
-       main() 
-```
-
-## 自定義 API 調試器
-
-```python
-# my_custom_debugger.py
-from api_debugger import ApiDebugger
-from port_detector import ApiPortDetector
-
-class MyProjectApiDebugger(ApiDebugger):
-    """針對我的專案定製的 API 調試器"""
-    
-    def __init__(self, base_url, api_key=None, **kwargs):
-        super().__init__(base_url, **kwargs)
-        
-        if api_key:
-            self.headers["X-API-Key"] = api_key
-    
-    def test_my_specific_feature(self, param1, param2):
-        """測試我的專案特有的功能"""
-        # 實現特定測試邏輯
-        result1 = self.test_endpoint(
-            endpoint=f"/feature/{param1}",
-            method="GET",
-            expected_status=200
-        )
-        
-        result2 = self.test_endpoint(
-            endpoint="/feature/action",
-            method="POST",
-            data={"param": param2},
-            expected_status=201
-        )
-        
-        return result1["success"] and result2["success"]
-    
-    def auto_test_my_api(self):
-        """自動測試我的 API"""
-        # 使用自動檢測功能
-        detector = ApiPortDetector(
-            host=self.base_url.split("://")[1].split(":")[0],
-            port_range=(8000, 9000)
-        )
-        
-        # 檢測端點
-        port = int(self.base_url.split(":")[-1].split("/")[0])
-        endpoints = detector.detect_api_endpoints(port)
-        
-        # 生成並運行測試用例
-        endpoint_data = {}
-        for endpoint, methods in endpoints.items():
-            endpoint_data[endpoint] = {
-                "methods": methods,
-                "data_templates": {}
-            }
-        
-        test_cases = detector.generate_test_cases(port, endpoint_data)
-        return self.run_test_suite(test_cases) 
+- `description`: 測試描述 
