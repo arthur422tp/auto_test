@@ -10,10 +10,14 @@
 ## 安裝方式
 
 1. 請先安裝 Python 3.11 或以上版本
-2. 安裝必要套件：
-
+2. 安裝 uv（如果尚未安裝）：
 ```bash
-pip install -r requirements.txt
+pip install uv
+```
+
+3. 安裝專案相依套件：
+```bash
+uv sync
 ```
 
 ## 快速開始
@@ -21,19 +25,19 @@ pip install -r requirements.txt
 ### 指令格式
 
 ```bash
-python auto_debug.py --port <PORT> --route <API路徑> [--method GET|POST] [--data '{JSON資料}']
+uv run python auto_debug.py --port <PORT> --route <API路徑> [--method GET|POST] [--data '{JSON資料}']
 ```
 
 ### 範例
 
 #### 測試 GET
 ```bash
-python auto_debug.py --port 5001 --route /api/test
+uv run python auto_debug.py --port 5001 --route /api/test
 ```
 
 #### 測試 POST 並帶資料
 ```bash
-python auto_debug.py --port 5001 --route /api/test --method POST --data '{"foo": "bar"}'
+uv run python auto_debug.py --port 5001 --route /api/test --method POST --data '{"foo": "bar"}'
 ```
 
 ## 參數說明
@@ -52,7 +56,8 @@ python auto_debug.py --port 5001 --route /api/test --method POST --data '{"foo":
 ## 檔案結構
 - auto_debug.py：主程式，負責參數解析與測試流程
 - api_tester.py：API 測試邏輯
-- requirements.txt：必要套件
+- pyproject.toml：uv 專案設定與相依套件
+- uv.lock：鎖定套件版本
 
 ---
 
