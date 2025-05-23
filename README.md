@@ -1,307 +1,317 @@
-# 🚀 API 自動 Debug 工具 v2.0
+# 🚀 API Debug Tool - 智能API測試工具
 
-這是一個強化版的 API Debug 工具，讓您只需輸入 API 伺服器的 port 和 route，系統就會自動對該 API 端點進行全面測試。
+一個功能強大的API測試工具，支援自動檢測HTTP方法和多場景測試。
 
-## ✨ 功能特色
+## ✨ 主要功能
 
-### 🎯 **核心功能**
-- 支援所有常用 HTTP 方法（GET、POST、PUT、PATCH、DELETE）
-- 自動測量回應時間與顯示詳細結果
-- 智能錯誤處理與連線檢測
-- 彩色終端輸出與表情符號指示
+### 🎯 智能單一API測試
+- **自動檢測HTTP方法**: 自動檢測API支援的HTTP方法 (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
+- **多場景測試**:
+  - ✅ **正常值測試**: 傳入符合規範的參數，確認能正確回傳資料
+  - ❌ **缺少欄位測試**: 刻意不傳某些必要欄位，觀察是否報錯
+  - 🌀 **格式錯誤測試**: 傳錯誤資料型別，確認錯誤處理是否完善
+  - 🧪 **邊界值測試**: 傳入極小/極大值，空字串，null 等情況
+  - 🚫 **不存在資源測試**: 傳入不存在的ID，看是否回傳404或自定義錯誤訊息
 
-### 🔐 **認證支援**
-- Bearer Token 認證
-- Basic 認證
-- 自訂 HTTP Headers
+### 📋 批次測試
+- JSON/YAML配置檔案支援
+- 批次執行多個測試案例
+- 支援自定義headers和認證
+- 詳細的測試統計和報告
 
-### 📊 **進階功能**
-- 批次測試（從 JSON/YAML 配置檔案）
-- 美觀的 HTML 測試報告生成
-- 測試結果統計與分析
-- 自動失敗測試高亮顯示
+### 📊 報告生成
+- JSON格式詳細報告
+- 美觀的HTML互動式報告
+- 測試統計和效能分析
+- 失敗案例詳細分析
 
-### ⚡ **效能優化**
-- 可設定請求逾時時間
-- 詳細的回應時間測量
-- 成功率統計
+## 🛠️ 安裝
 
----
-
-## 📦 安裝方式
-
-1. 請先安裝 Python 3.11 或以上版本
-2. 安裝 uv（如果尚未安裝）：
+確保已安裝 `uv` 套件管理器：
 ```bash
 pip install uv
 ```
 
-3. 安裝專案相依套件：
+安裝專案依賴：
 ```bash
 uv sync
 ```
 
----
+## 📖 使用方法
 
-## 🚀 快速開始
+### 🎯 智能單一API測試
 
-### 基本用法
-
-```bash
-# 測試 GET 請求
-uv run python auto_debug.py --port 5001 --route /api/test
-
-# 測試 POST 請求並帶資料
-uv run python auto_debug.py --port 5001 --route /api/users --method POST --data '{"name":"測試使用者","email":"test@example.com"}'
-
-# 測試 HTTPS API
-uv run python auto_debug.py --protocol https --host api.example.com --port 443 --route /api/data
-
-# 包含認證的測試
-uv run python auto_debug.py --port 5001 --route /api/protected --auth-bearer "your-token-here"
-```
-
-### 進階用法
+對單一API端點進行全面的自動化測試：
 
 ```bash
-# 測試所有 HTTP 方法
-uv run python auto_debug.py --port 5001 --route /api/users --method GET
-uv run python auto_debug.py --port 5001 --route /api/users --method POST --data '{"name":"test"}'
-uv run python auto_debug.py --port 5001 --route /api/users/1 --method PUT --data '{"name":"updated"}'
-uv run python auto_debug.py --port 5001 --route /api/users/1 --method DELETE
+# 基本智能測試
+uv run python comprehensive_api_tester.py smart http://localhost:8000 /api/list_contracts
 
-# 自訂 Headers
-uv run python auto_debug.py --port 5001 --route /api/data --headers '{"Content-Type":"application/xml","X-Custom":"value"}'
-
-# Basic 認證
-uv run python auto_debug.py --port 5001 --route /api/auth --auth-basic "username:password"
+# 生成HTML報告
+uv run python comprehensive_api_tester.py smart http://localhost:8000 /api/list_contracts --html-report
 
 # 設定逾時時間
-uv run python auto_debug.py --port 5001 --route /api/slow --timeout 30
+uv run python comprehensive_api_tester.py smart http://localhost:8000 /api/users --timeout 60
 ```
 
----
+### 📋 批次測試
 
-## 📋 批次測試
+使用配置檔案批次執行多個測試：
 
-### 建立配置檔案
+```bash
+# 基本批次測試
+uv run python comprehensive_api_tester.py batch tests.json
+
+# 生成HTML報告
+uv run python comprehensive_api_tester.py batch tests.json --html-report
+
+# 指定輸出檔案
+uv run python comprehensive_api_tester.py batch tests.json --output my_report.json
+```
+
+### 📝 生成範例配置檔案
 
 ```bash
 # 建立範例配置檔案
-uv run python batch_tester.py --create-sample
+uv run python comprehensive_api_tester.py create-samples
 ```
 
-### 執行批次測試
+這會建立：
+- `basic_batch_config.json` - 基本批次測試配置
+- `smart_test_config.json` - 智能測試配置範例
 
-```bash
-# 從 JSON 配置檔案執行
-uv run python batch_tester.py sample_config.json
+## 📄 配置檔案格式
 
-# 從 YAML 配置檔案執行
-uv run python batch_tester.py tests.yaml
-```
-
-### 配置檔案範例 (JSON)
+### 基本批次測試配置
 
 ```json
 {
-  "base_url": "http://localhost:5001",
+  "base_url": "http://localhost:8000",
   "timeout": 10,
   "headers": {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "Authorization": "Bearer your-token"
   },
   "tests": [
     {
-      "name": "測試 GET 使用者列表",
+      "name": "✅ GET 用戶列表",
       "endpoint": "/api/users",
       "method": "GET"
     },
     {
-      "name": "測試 POST 建立使用者",
+      "name": "📝 POST 建立用戶",
       "endpoint": "/api/users",
       "method": "POST",
       "data": {
-        "name": "測試使用者",
+        "name": "測試用戶",
         "email": "test@example.com"
-      }
-    },
-    {
-      "name": "測試需要認證的端點",
-      "endpoint": "/api/protected",
-      "method": "GET",
-      "headers": {
-        "Authorization": "Bearer your-token"
       }
     }
   ]
 }
 ```
 
----
+### 智能測試配置
 
-## 📊 HTML 報告生成
-
-```bash
-# 從測試結果生成 HTML 報告
-uv run python report_generator.py test_report.json my_report.html
+```json
+{
+  "test_configs": [
+    {
+      "name": "📋 用戶API完整測試",
+      "base_url": "http://localhost:3000",
+      "endpoint": "/api/users",
+      "test_scenarios": {
+        "auto_detect_methods": true,
+        "normal_value_tests": true,
+        "missing_field_tests": true,
+        "format_error_tests": true,
+        "boundary_value_tests": true,
+        "nonexistent_resource_tests": true
+      }
+    }
+  ]
+}
 ```
 
-生成的 HTML 報告包含：
-- 📈 測試統計圖表
-- 🎯 詳細的測試結果
-- ⚡ 回應時間分析
-- 🔍 失敗測試的詳細資訊
-- 📱 響應式設計（支援手機瀏覽）
+## 🔧 進階功能
 
----
+### 認證支援
 
-## 🛠️ 參數說明
+支援多種認證方式：
 
-### auto_debug.py 參數
+```json
+{
+  "headers": {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "X-API-Key": "your-api-key"
+  }
+}
+```
 
-| 參數 | 類型 | 說明 | 必填 | 預設值 |
-|------|------|------|------|--------|
-| `--port` | int | API 伺服器 port | ✅ | 無 |
-| `--route` | str | API 路由路徑 | ✅ | 無 |
-| `--method` | str | HTTP 方法 (GET/POST/PUT/PATCH/DELETE) | ❌ | 自動測試 GET+POST |
-| `--data` | str | 請求資料 (JSON 格式) | ❌ | 自動生成 |
-| `--host` | str | API 主機位址 | ❌ | localhost |
-| `--protocol` | str | 協定 (http/https) | ❌ | http |
-| `--timeout` | int | 請求逾時秒數 | ❌ | 10 |
-| `--headers` | str | 自訂 Headers (JSON 格式) | ❌ | 無 |
-| `--auth-bearer` | str | Bearer Token 認證 | ❌ | 無 |
-| `--auth-basic` | str | Basic 認證 (格式: user:pass) | ❌ | 無 |
-| `--verbose` | flag | 詳細輸出模式 | ❌ | False |
-| `--quiet` | flag | 安靜模式 | ❌ | False |
+### 自定義測試資料
 
----
+可以自定義各種測試場景的資料：
 
-## 📁 檔案結構
+```json
+{
+  "custom_test_data": {
+    "normal": {
+      "name": "正常用戶",
+      "email": "normal@example.com",
+      "age": 25
+    },
+    "boundary": {
+      "age": [0, 1, 120, 999, -1],
+      "name": ["", "A", "超長名稱..."]
+    },
+    "invalid": {
+      "email": ["invalid-email", 123, null],
+      "age": ["not_a_number", null]
+    }
+  }
+}
+```
+
+## 📊 測試報告
+
+### JSON報告
+詳細的機器可讀格式，包含：
+- 測試摘要統計
+- 每個測試案例的詳細結果
+- 請求/回應資料
+- 效能指標
+
+### HTML報告
+美觀的網頁格式報告，包含：
+- 互動式測試結果瀏覽
+- 視覺化統計圖表
+- 可折疊的詳細資訊
+- 回應式設計，支援行動裝置
+
+## 🔍 測試場景解析
+
+### ✅ 正常值測試
+驗證API在收到正確格式的請求時能正常運作：
+- 傳送符合API規範的參數
+- 驗證回應狀態碼為2xx
+- 檢查回應資料格式
+
+### ❌ 缺少欄位測試
+檢測API的輸入驗證機制：
+- 故意省略必要欄位
+- 驗證是否回傳適當的錯誤訊息
+- 確認狀態碼為4xx
+
+### 🌀 格式錯誤測試
+驗證API的資料型別檢查：
+- 傳送錯誤的資料型別（如字串代替數字）
+- 傳送無效的JSON格式
+- 驗證錯誤處理機制
+
+### 🧪 邊界值測試
+測試API的邊界情況處理：
+- 極大/極小數值
+- 空字串和null值
+- 超長字串
+- 特殊字元
+
+### 🚫 不存在資源測試
+驗證API的資源查找機制：
+- 請求不存在的資源ID
+- 驗證404錯誤回應
+- 檢查錯誤訊息的適當性
+
+## 🎭 使用範例
+
+### 範例1：測試合約API
+
+```bash
+# 對合約API進行全面測試
+uv run python comprehensive_api_tester.py smart http://localhost:8000 /api/list_contracts --html-report
+```
+
+這會：
+1. 自動檢測支援的HTTP方法
+2. 執行各種測試場景
+3. 生成詳細的HTML報告
+
+### 範例2：批次測試多個端點
+
+建立 `api_tests.json`：
+```json
+{
+  "base_url": "http://localhost:8000",
+  "timeout": 30,
+  "tests": [
+    {
+      "name": "合約列表",
+      "endpoint": "/api/list_contracts",
+      "method": "GET"
+    },
+    {
+      "name": "用戶資料",
+      "endpoint": "/api/users/1",
+      "method": "GET"
+    },
+    {
+      "name": "建立用戶",
+      "endpoint": "/api/users",
+      "method": "POST",
+      "data": {"name": "測試", "email": "test@example.com"}
+    }
+  ]
+}
+```
+
+執行：
+```bash
+uv run python comprehensive_api_tester.py batch api_tests.json --html-report
+```
+
+## 🏗️ 專案結構
 
 ```
 api_debug_tool/
-├── auto_debug.py          # 🎯 主程式入口
-├── api_tester.py          # 🧪 API 測試核心邏輯
-├── batch_tester.py        # 📋 批次測試工具
-├── report_generator.py    # 📊 HTML 報告生成器
-├── pyproject.toml         # 📦 uv 專案設定
-├── uv.lock               # 🔒 套件版本鎖定
-├── .gitignore            # 🚫 Git 忽略檔案
-└── README.md             # 📖 說明文件
+├── comprehensive_api_tester.py   # 主要CLI工具
+├── smart_api_tester.py          # 智能API測試器
+├── api_tester.py                # 基本API測試功能
+├── batch_tester.py              # 批次測試功能
+├── report_generator.py          # 報告生成器
+├── auto_debug.py                # 簡單測試工具
+├── pyproject.toml               # 專案配置
+└── README.md                    # 說明文件
 ```
 
----
+## 🔧 開發
 
-## 🎨 輸出範例
+### 專案依賴
+- `requests` - HTTP請求
+- `pyyaml` - YAML配置檔案支援
+- `uv` - 套件管理
 
-```
-🚀 API 自動 Debug 工具
-==================================================
-🌐 目標: http://localhost:5001/api/users
-⏱️  逾時: 10秒
-🎯 方法: 自動測試 (GET + POST)
-
-🎯 開始 API 測試
-🌐 目標 URL: http://localhost:5001/api/users
-==================================================
-
-🚀 測試 GET http://localhost:5001/api/users
-⏱️  開始時間: 2024-01-01 12:00:00
-✅ 狀態碼: 200
-⚡ 回應時間: 0.156秒
-📥 回應內容: {
-  "users": [
-    {"id": 1, "name": "使用者1"},
-    {"id": 2, "name": "使用者2"}
-  ]
-}
-
-🚀 測試 POST http://localhost:5001/api/users
-⏱️  開始時間: 2024-01-01 12:00:01
-📤 請求資料: {
-  "test": "value",
-  "timestamp": 1704096001
-}
-✅ 狀態碼: 201
-⚡ 回應時間: 0.234秒
-📥 回應內容: {
-  "message": "使用者建立成功",
-  "id": 3
-}
-
-==================================================
-📊 測試摘要
-==================================================
-總測試數: 2
-✅ 成功: 2
-❌ 失敗: 0
-📈 成功率: 100.0%
-⚡ 平均回應時間: 0.195秒
-```
-
----
-
-## 🔧 開發者資訊
-
-### 安裝開發相依套件
-
+### 執行測試
 ```bash
-uv sync --group dev
+# 測試基本功能
+uv run python api_tester.py
+
+# 測試智能功能
+uv run python smart_api_tester.py http://localhost:8000 /api/test
+
+# 測試批次功能
+uv run python batch_tester.py test_config.json
 ```
 
-### 程式碼格式化
+## 💡 提示與技巧
 
-```bash
-uv run black .
-```
-
-### 程式碼檢查
-
-```bash
-uv run flake8 .
-```
-
----
-
-## 🆕 更新日誌
-
-### v2.0.0 (2024-01-01)
-- ✨ 支援所有 HTTP 方法（GET、POST、PUT、PATCH、DELETE）
-- 🔐 新增認證支援（Bearer Token、Basic Auth）
-- 📊 新增 HTML 測試報告生成
-- 📋 新增批次測試功能
-- ⚡ 新增回應時間測量
-- 🎨 改善終端輸出與錯誤處理
-- 🐛 修正各種小問題
-
-### v1.0.0 (2023-12-01)
-- 🎯 基本 GET/POST 測試功能
-- 📝 簡單的終端輸出
-
----
-
-## 📄 授權
-
-MIT License
-
----
+1. **逾時設定**: 對於回應較慢的API，建議增加逾時時間
+2. **認證**: 在headers中正確設定認證資訊
+3. **測試資料**: 使用真實但非敏感的測試資料
+4. **報告分析**: 重點關注失敗的測試案例，分析API的改進空間
 
 ## 🤝 貢獻
 
-歡迎提交 Issue 和 Pull Request！
+歡迎提交問題報告、功能請求或直接貢獻代碼！
 
----
+## 📝 授權
 
-## ❓ 常見問題
-
-### Q: 如何測試需要認證的 API？
-A: 使用 `--auth-bearer` 或 `--auth-basic` 參數，或透過 `--headers` 自訂認證標頭。
-
-### Q: 如何批次測試多個端點？
-A: 建立 JSON 或 YAML 配置檔案，然後使用 `batch_tester.py` 執行。
-
-### Q: 如何生成測試報告？
-A: 批次測試會自動生成 JSON 報告，可使用 `report_generator.py` 轉換為 HTML 報告。
-
-### Q: 支援 HTTPS 嗎？
-A: 支援！使用 `--protocol https` 參數即可。 
+本專案使用 MIT 授權條款。 
