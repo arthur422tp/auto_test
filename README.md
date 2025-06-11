@@ -20,6 +20,7 @@
 - JSON/YAML配置檔案支援
 - 批次執行多個測試案例
 - 支援自定義headers和認證
+- 可設定同時執行的測試數量
 - 詳細的測試統計和報告
 
 ### 📊 報告生成
@@ -70,6 +71,9 @@ uv run python comprehensive_api_tester.py batch tests.json --html-report
 
 # 指定輸出檔案
 uv run python comprehensive_api_tester.py batch tests.json --output my_report.json
+
+# 設定同時執行的測試數量
+uv run python comprehensive_api_tester.py batch tests.json --concurrency 4
 ```
 
 ### 📝 生成範例配置檔案
