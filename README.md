@@ -58,6 +58,15 @@ uv run python comprehensive_api_tester.py smart http://localhost:8000 /api/list_
 uv run python comprehensive_api_tester.py smart http://localhost:8000 /api/users --timeout 60
 ```
 
+### 🚀 壓力測試
+
+對端點進行高併發壓力測試：
+
+```bash
+# 以 50 並發發送 500 次請求
+uv run python comprehensive_api_tester.py stress http://localhost:8000 /api/list_contracts --requests 500 --concurrency 50 --html-report
+```
+
 ### 📋 批次測試
 
 使用配置檔案批次執行多個測試：
@@ -281,6 +290,7 @@ uv run python comprehensive_api_tester.py batch api_tests.json --html-report
 api_debug_tool/
 ├── comprehensive_api_tester.py   # 主要CLI工具
 ├── smart_api_tester.py          # 智能API測試器
+├── concurrent_api_tester.py     # 並發壓力測試器
 ├── api_tester.py                # 基本API測試功能
 ├── batch_tester.py              # 批次測試功能
 ├── report_generator.py          # 報告生成器
@@ -294,6 +304,7 @@ api_debug_tool/
 ### 專案依賴
 - `requests` - HTTP請求
 - `pyyaml` - YAML配置檔案支援
+- `aiohttp` - 非同步 HTTP 客戶端
 - `uv` - 套件管理
 
 ### 執行測試
