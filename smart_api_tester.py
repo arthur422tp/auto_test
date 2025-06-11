@@ -1,8 +1,11 @@
-import requests
+import argparse
 import json
 import time
 from typing import Optional, Dict, Any, List
+
+import requests
 from api_tester import ApiTester
+from report_generator import ReportGenerator
 
 class SmartApiTester:
     """智能API測試器 - 支援自動方法檢測和多場景測試"""
@@ -335,26 +338,27 @@ class SmartApiTester:
         print(f"\n📄 詳細測試報告已儲存至: {output_file}")
         return output_file
 
-def main():
-    """主程式入口"""
-    import sys
-    
-    if len(sys.argv) < 3:
-        print("用法: python smart_api_tester.py <base_url> <endpoint>")
-        print("範例: python smart_api_tester.py http://localhost:8000 /api/list_contracts")
-        sys.exit(1)
-    
-    base_url = sys.argv[1]
-    endpoint = sys.argv[2]
-    
-    # 創建智能測試器
-    tester = SmartApiTester(base_url, endpoint)
-    
-    # 執行全面測試
+def main() -> None:
+    """命令列介面入口"""
+    parser = argparse.ArgumentParser(description="智能 API 測試器")
+    parser.add_argument("base_url", help="API 基礎 URL，如 http://localhost:8000")
+    parser.add_argument("endpoint", help="API 端點，如 /api/list_contracts")
+    parser.add_argument("--timeout", type=int, default=10, help="請求逾時秒數")
+    parser.add_argument("--html-report", action="store_true", help="輸出 HTML 報告")
+    args = parser.parse_args()
+
+    tester = SmartApiTester(args.base_url, args.endpoint, timeout=args.timeout)
     tester.run_comprehensive_tests()
-    
-    # 生成報告
-    tester.generate_detailed_report()
+
+    report_file = tester.generate_detailed_report()
+
+    if args.html_report:
+        with open(report_file, "r", encoding="utf-8") as f:
+            report_data = json.load(f)
+        generator = ReportGenerator(report_data["detailed_results"])
+        html_file = report_file.replace(".json", ".html")
+        generator.generate_html_report(html_file)
+        print(f"📄 HTML報告已生成: {html_file}")
 
 if __name__ == "__main__":
     main() 
