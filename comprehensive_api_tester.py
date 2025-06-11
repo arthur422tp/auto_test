@@ -65,7 +65,7 @@ def run_batch_test(args):
     print(f"📋 批次測試模式: {args.config_file}")
     
     try:
-        tester = BatchTester(args.config_file)
+        tester = BatchTester(args.config_file, max_workers=args.concurrency)
         tester.run_batch_tests()
         
         # 生成JSON報告
@@ -193,6 +193,7 @@ def main():
     batch_parser.add_argument('config_file', help='測試配置檔案 (JSON/YAML)')
     batch_parser.add_argument('--output', help='輸出報告檔案名稱')
     batch_parser.add_argument('--html-report', action='store_true', help='生成HTML報告')
+    batch_parser.add_argument('--concurrency', type=int, default=1, help='同時測試的執行緒數')
     
     # 建立範例檔案指令
     samples_parser = subparsers.add_parser('create-samples', help='建立範例配置檔案')

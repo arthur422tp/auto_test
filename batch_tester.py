@@ -1,12 +1,14 @@
 import json
 import yaml
 import os
+import concurrent.futures
 from typing import List, Dict, Any
 from api_tester import ApiTester
 
 class BatchTester:
-    def __init__(self, config_file: str):
+    def __init__(self, config_file: str, max_workers: int = 1):
         self.config_file = config_file
+        self.max_workers = max_workers
         self.config = self.load_config()
         self.all_results = []
 
@@ -28,6 +30,35 @@ class BatchTester:
         except Exception as e:
             raise ValueError(f"無法解析配置檔案: {e}")
 
+    def _execute_test_case(self, index: int, total: int, test_case: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """在執行緒中執行單一測試案例"""
+        print(f"🧪 執行測試案例 {index}/{total}: {test_case.get('name', f'Test {index}')}")
+        print("-" * 40)
+
+        # 建構 URL
+        base_url = test_case.get('base_url', self.config.get('base_url', 'http://localhost'))
+        endpoint = test_case.get('endpoint', '/')
+        url = f"{base_url.rstrip('/')}{endpoint}"
+
+        tester = ApiTester(
+            url=url,
+            timeout=test_case.get('timeout', self.config.get('timeout', 10)),
+            headers=test_case.get('headers', self.config.get('headers', {}))
+        )
+
+        method = test_case.get('method')
+        data = test_case.get('data')
+
+        tester.run_tests(method=method, data=json.dumps(data) if data else None)
+
+        test_results = tester.get_results()
+        for result in test_results:
+            result['test_case_name'] = test_case.get('name', f'Test {index}')
+            result['test_case_index'] = index
+
+        print()
+        return test_results
+
     def run_batch_tests(self):
         """執行批次測試"""
         print("🚀 批次 API 測試工具")
@@ -42,36 +73,18 @@ class BatchTester:
         print(f"📋 找到 {len(test_cases)} 個測試案例")
         print()
         
-        for i, test_case in enumerate(test_cases, 1):
-            print(f"🧪 執行測試案例 {i}/{len(test_cases)}: {test_case.get('name', f'Test {i}')}")
-            print("-" * 40)
-            
-            # 建構 URL
-            base_url = test_case.get('base_url', self.config.get('base_url', 'http://localhost'))
-            endpoint = test_case.get('endpoint', '/')
-            url = f"{base_url.rstrip('/')}{endpoint}"
-            
-            # 建立測試器
-            tester = ApiTester(
-                url=url,
-                timeout=test_case.get('timeout', self.config.get('timeout', 10)),
-                headers=test_case.get('headers', self.config.get('headers', {}))
-            )
-            
-            # 執行測試
-            method = test_case.get('method')
-            data = test_case.get('data')
-            
-            tester.run_tests(method=method, data=json.dumps(data) if data else None)
-            
-            # 儲存結果
-            test_results = tester.get_results()
-            for result in test_results:
-                result['test_case_name'] = test_case.get('name', f'Test {i}')
-                result['test_case_index'] = i
-            
-            self.all_results.extend(test_results)
-            print()
+        total_cases = len(test_cases)
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = [
+                executor.submit(self._execute_test_case, i, total_cases, tc)
+                for i, tc in enumerate(test_cases, 1)
+            ]
+
+            for future in concurrent.futures.as_completed(futures):
+                self.all_results.extend(future.result())
+
+        print()
         
         # 顯示總體摘要
         self.print_overall_summary()
