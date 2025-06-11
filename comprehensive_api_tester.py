@@ -6,9 +6,11 @@
 import argparse
 import json
 import sys
+import asyncio
 from smart_api_tester import SmartApiTester
 from batch_tester import BatchTester
 from report_generator import ReportGenerator
+from concurrent_api_tester import ConcurrentApiTester
 
 def print_banner():
     """列印工具橫幅"""
@@ -93,6 +95,29 @@ def run_batch_test(args):
         print(f"❌ 批次測試失敗: {e}")
         sys.exit(1)
 
+def run_stress_test(args):
+    """執行壓力測試"""
+    print(f"🚀 壓力測試模式: {args.base_url}{args.endpoint}")
+
+    tester = ConcurrentApiTester(
+        base_url=args.base_url,
+        endpoint=args.endpoint,
+        method=args.method,
+        num_requests=args.requests,
+        concurrency=args.concurrency,
+        timeout=args.timeout,
+    )
+
+    asyncio.run(tester.run_tests())
+
+    report_file = args.output or "stress_test_report.json"
+    tester.generate_report(report_file)
+
+    if args.html_report:
+        html_file = report_file.replace('.json', '.html')
+        tester.generate_html_report(report_file, html_file)
+        print(f"📄 HTML報告已生成: {html_file}")
+
 def create_sample_configs():
     """創建範例配置檔案"""
     # 智能測試配置
@@ -173,9 +198,12 @@ def main():
   
   # 生成範例配置檔案
   python comprehensive_api_tester.py create-samples
-  
+
   # 帶HTML報告的測試
   python comprehensive_api_tester.py smart http://localhost:8000 /api/users --html-report
+
+  # 壓力測試
+  python comprehensive_api_tester.py stress http://localhost:8000 /api/list_contracts --requests 500 --concurrency 50
         """
     )
     
@@ -193,6 +221,17 @@ def main():
     batch_parser.add_argument('config_file', help='測試配置檔案 (JSON/YAML)')
     batch_parser.add_argument('--output', help='輸出報告檔案名稱')
     batch_parser.add_argument('--html-report', action='store_true', help='生成HTML報告')
+
+    # 壓力測試指令
+    stress_parser = subparsers.add_parser('stress', help='並發壓力測試')
+    stress_parser.add_argument('base_url', help='API基礎URL (例: http://localhost:8000)')
+    stress_parser.add_argument('endpoint', help='API端點 (例: /api/list_contracts)')
+    stress_parser.add_argument('--method', default='GET', help='HTTP 方法 (預設: GET)')
+    stress_parser.add_argument('--requests', type=int, default=100, help='總請求數 (預設: 100)')
+    stress_parser.add_argument('--concurrency', type=int, default=10, help='同時並發數 (預設: 10)')
+    stress_parser.add_argument('--timeout', type=int, default=10, help='逾時秒數 (預設: 10)')
+    stress_parser.add_argument('--output', help='輸出報告檔案名稱')
+    stress_parser.add_argument('--html-report', action='store_true', help='生成HTML報告')
     
     # 建立範例檔案指令
     samples_parser = subparsers.add_parser('create-samples', help='建立範例配置檔案')
@@ -211,6 +250,8 @@ def main():
         run_smart_test(args)
     elif args.command == 'batch':
         run_batch_test(args)
+    elif args.command == 'stress':
+        run_stress_test(args)
     elif args.command == 'create-samples':
         create_sample_configs()
     else:

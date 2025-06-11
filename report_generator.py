@@ -24,9 +24,11 @@ class ReportGenerator:
         failed_tests = total_tests - successful_tests
         success_rate = (successful_tests / total_tests * 100) if total_tests > 0 else 0
         
-        # 計算平均回應時間
+        # 計算回應時間統計
         valid_times = [r['response_time'] for r in self.results if r['response_time'] > 0]
         avg_response_time = sum(valid_times) / len(valid_times) if valid_times else 0
+        max_response_time = max(valid_times) if valid_times else 0
+        min_response_time = min(valid_times) if valid_times else 0
 
         html = f"""
 <!DOCTYPE html>
@@ -269,6 +271,14 @@ class ReportGenerator:
             <div class="summary-card">
                 <div class="number info">{avg_response_time:.3f}s</div>
                 <div class="label">平均回應時間</div>
+            </div>
+            <div class="summary-card">
+                <div class="number info">{min_response_time:.3f}s</div>
+                <div class="label">最快回應時間</div>
+            </div>
+            <div class="summary-card">
+                <div class="number info">{max_response_time:.3f}s</div>
+                <div class="label">最慢回應時間</div>
             </div>
         </div>
         
